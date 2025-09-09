@@ -4,7 +4,7 @@ import streamlit as st
 import time
 
 
-#Variables that stay when streamli executes
+#Variables that stay when streamlit executes
 if 'experiment_no' not in st.session_state:
 	st.session_state['experiment_no'] = 0
 
@@ -42,11 +42,15 @@ number_of_trials = st.slider('Number of Attempts?', 1, 1000, 10)
 
 start_button = st.button('Execute')
 
+
 if start_button:
 	st.write(f'Experiment with {number_of_trials} ongoing trials.')
+	st.session_state['experiment_no'] += 1
 	mean = toss_coin(number_of_trials)
+	st.session_state['df_experiment_results'] = pd.concat ([st.session_state['df_experiment_results'], pd.DataFrame(data = [[st.session_state['experiment_no'], number_of_trials, mean]],columns=['no', 'iterations', 'mean'])], axis =0)
+	st.session_state['df_experiment_results'] = st.session_state['df_experiment_results'].reset_index(drop=True)
 
-
+st.write(st.session_state['df_experiment_results'])
 
 
 
